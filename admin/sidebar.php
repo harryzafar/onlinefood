@@ -13,17 +13,24 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="table.html">
-              <i class="mdi mdi-grid-large menu-icon"></i>
-              <span class="menu-title">Table</span>
+            <a class="nav-link" href="users.php">
+              <i class="mdi mdi-account-multiple menu-icon"></i>
+              <span class="menu-title">Users</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="login.html">
-              <i class="mdi mdi-airplay menu-icon"></i>
-              <span class="menu-title">Login</span>
+            <a class="nav-link" href="delivery_boy.php">
+              <i class="mdi mdi-account-circle menu-icon"></i>
+              <span class="menu-title">Delievery Boy</span>
             </a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="coupon_code.php">
+              <i class="mdi mdi-ticket-percent menu-icon"></i>
+              <span class="menu-title">Coupan Code</span>
+            </a>
+          </li>
+          
 
         </ul>
       </nav>

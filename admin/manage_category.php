@@ -1,22 +1,45 @@
 <?php
 include('top.php');
 
+$id = "";
+$category = "";
+$order_number = "";
 $error = "";
+
+if(isset($_GET['id']) && $_GET['id'] > 0){
+  $id = get_safe_value($_GET['id']);
+  $result = mysqli_query($conn, "SELECT * from category where id = '$id'") or die('search query failed');
+  $row = mysqli_fetch_assoc($result);
+  $category = $row['category'];
+  $order_number = $row['order_number'];
+}
+
+
+
 if($_SERVER['REQUEST_METHOD'] == "POST"){
     if(isset($_POST['submit'])){
         $category = get_safe_value($_POST['category']);
         $order_number = get_safe_value($_POST['order_number']);
-        $status = get_safe_value($_POST['status']);
         $added_on = date('Y-m-i h:i:s');
 
-        $check_cateogry = mysqli_query($conn, "SELECT * FROM category where category = '$category'");
-        if( mysqli_num_rows($check_cateogry) > 0 ){
+        if($id == ''){
+          $check_cateogry_query = "SELECT * FROM category where category = '$category'";
+        }else{
+          $check_cateogry_query = "SELECT * FROM category where category = '$category' AND id != '$id'";
+        }
+        
+        if(mysqli_num_rows(mysqli_query($conn, $check_cateogry_query)) > 0 ){
             $error = "This category is already Exist";
         }
         else{
-            $sql = "INSERT INTO category (category, order_number , status , added_on) values ('$category', '$order_number', '$status', '$added_on')";
-            $insert = mysqli_query($conn , $sql) or die("add query failed");
-            if($insert){
+          if($id == ''){
+            $sql = "INSERT INTO category (category, order_number, status, added_on) values ('$category', '$order_number', 1, '$added_on')";
+          }else{
+            $sql = "UPDATE category set category = '$category', order_number = '$order_number' where id = '$id'";
+          }
+            
+            $query = mysqli_query($conn , $sql) or die("add/edit query failed");
+            if($query){
                 redirect('category.php');
             }
             else{
@@ -28,6 +51,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
     }
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -62,7 +86,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         <div class="content-wrapper">
            <div class="card">
             <div class="card-body">
-            <h4 class="mb-3">Add Category</h4>
+            <h4 class="mb-3">Manage Category</h4>
               <div class="row">
                 <div class="col-12">
                 <div class="card">
@@ -70,20 +94,14 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                   <form class="forms-sample" method="post">
                     <div class="form-group">
                       <label for="exampleInputName1">Category Name</label>
-                      <input type="text" class="form-control" id="exampleInputName1" placeholder="Name" name="category">
+                      <input type="text" class="form-control" id="exampleInputName1" placeholder="Name" name="category" value="<?php echo $category;?>">
                       <p class="text-danger mt-2"><?php echo $error ;?></p>
                     </div>
                     <div class="form-group">
                       <label for="exampleInputPassword4">Order Number</label>
-                      <input type="text" class="form-control" id="exampleInputPassword4" placeholder="Order Number" name="order_number">
+                      <input type="text" class="form-control" id="exampleInputPassword4" placeholder="Order Number" name="order_number" value="<?php echo $order_number;?>">
                     </div>
-                    <div class="form-group">
-                      <label for="status">Status:</label><br>
-                      <label for="active">Active</label>
-                      <input type="radio" id="active" checked  name="status" value="1">
-                      <label for="deactive">Deactive</label>
-                      <input type="radio" id="deactive" name="status" value="0">
-                    </div>
+                    
                     
                     <button type="submit" class="btn btn-primary mr-2" name="submit">Submit</button>
                     <a href="category.php" class="btn btn-light">Cancel</a>

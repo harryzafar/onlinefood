@@ -1,19 +1,20 @@
 <?php
 include('top.php');
+
 if(isset($_GET['type']) && $_GET['type'] !== "" && isset($_GET['id']) && $_GET['id'] > 0){
     $type = $_GET['type'];
     $id = $_GET['id'];
     if($type == 'delete'){
-        mysqli_query($conn, "DELETE from category where id = '$id'");
-        redirect('category.php');
-    }
+      mysqli_query($conn, "DELETE from coupon_code where id = '$id'");
+      redirect('coupon_code.php');
+  }
     if($type == 'active' || $type == 'deactive'){
         $status = 1;
         if($type == "deactive"){
             $status = 0;
         }
-        mysqli_query($conn , "UPDATE category set status = '$status'  where id = '$id'" );
-        redirect('category.php');
+        mysqli_query($conn , "UPDATE coupon_code set status = '$status'  where id = '$id'" );
+        redirect('coupon_code.php');
     }
     
 }
@@ -52,10 +53,11 @@ if(isset($_GET['type']) && $_GET['type'] !== "" && isset($_GET['id']) && $_GET['
         <div class="content-wrapper">
            <div class="card">
             <div class="card-body">
-              <div class="d-flex justify-content-between">
-                <h4 class="mb-3">Category Master</h4>
-                <a href="manage_category.php" class="btn btn-primary">Add Category</a>
+            <div class="d-flex justify-content-between">
+                <h4 class="mb-3">Coupan Code Master</h4>
+                <a href="manage_coupon.php" class="btn btn-primary">Add Coupan</a>
               </div>
+              
               <div class="row mt-3">
                 <div class="col-12">
                   <div class="table-responsive">
@@ -63,16 +65,19 @@ if(isset($_GET['type']) && $_GET['type'] !== "" && isset($_GET['id']) && $_GET['
                       <thead>
                         <tr>
                             <th width="10%">Order #</th>
-                            <th>Category</th>
-                            <th>Order_number</th>
-                            <th>Status</th>
+                            <th>Code</th>
+                            <th>Type</th>
+                            <th>Value</th>
+                            <th>Cart Min</th>
+                            <th>Expired On</th>
+                            <th>Added On</th>
                             <th>Actions</th>
                         </tr>
                       </thead>
                       <tbody>
                         <?php
-                         $sql = "SELECT * FROM category order by order_number";
-                         $result= mysqli_query($conn, $sql) or die('category query failed');
+                         $sql = "SELECT * FROM coupon_code";
+                         $result= mysqli_query($conn, $sql) or die('coupan_code query failed');
 
                         if(mysqli_num_rows($result) > 0){
                             $sr = 1;
@@ -80,8 +85,17 @@ if(isset($_GET['type']) && $_GET['type'] !== "" && isset($_GET['id']) && $_GET['
 
                             <tr>
                             <td><?php echo $sr;?></td>
-                            <td><?php echo $row['category'];?></td>
-                            <td><?php echo $row['order_number']; ?></td>
+                            <td><?php echo $row['coupon_code'];?></td>
+                            
+                            <td><?php echo $row['coupon_type']; ?></td>
+                            <td><?php echo $row['coupon_value']; ?></td>
+                            <td><?php echo $row['cart_min_value']; ?></td>
+                            <td><?php echo $row['expired_on']; ?></td>
+                            <td><?php
+                                 $dateStr = strtotime($row['added_on']);
+                                 echo date('d-m-Y', $dateStr);
+                                ?>
+                            </td>
                             <td>
                                 <?php
                                 if($row['status'] == 1){?>
@@ -90,16 +104,14 @@ if(isset($_GET['type']) && $_GET['type'] !== "" && isset($_GET['id']) && $_GET['
                                 <a href="?id=<?php echo $row['id']?>&type=active" class="badge badge-warning">Deactive</a>
                                <?php ;}
                                 ?>
-                            </td>
-                            <td>
-                              <a href="manage_category.php?id=<?php echo $row['id'];?>" class="btn btn-primary">Edit</a>
-                              <a href="?id=<?php echo $row['id'];?>&type=delete" class="btn btn-danger">Delete</a>
+                                <a href="manage_boys.php?id=<?php echo $row['id'];?>" class="badge badge-primary">Edit</a>
+                                <a href="?id=<?php echo $row['id'];?>&type=delete" class="badge badge-danger">Delete</a>
                             </td>
                         </tr>
                          <?php $sr++; } 
                         }else{?>
                             <tr>
-                            <td colspan="5" class="text-center">No data found</td>
+                            <td colspan="9" class="text-center">No data found</td>
                             
                         </tr>
 
