@@ -16,24 +16,9 @@ if(isset($_GET['type']) && $_GET['type'] !== "" && isset($_GET['id']) && $_GET['
 }
 
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Food Ordering Admin</title>
-  <!-- plugins:css -->
-  <link rel="stylesheet" href="assets/css/materialdesignicons.min.css">
-  <link rel="stylesheet" href="assets/css/vendor.bundle.base.css">
-  <link rel="stylesheet" href="assets/css/dataTables.bootstrap4.css">
-  <!-- endinject -->
-  <!-- Plugin css for this page -->
-  <link rel="stylesheet" href="assets/css/bootstrap-datepicker.min.css">
-  <!-- End plugin css for this page -->
-  <!-- inject:css -->
-  <link rel="stylesheet" href="assets/css/style.css">
-</head>
+<?php
+include('head.php');
+?>
 <body class="sidebar-light">
   <div class="container-scroller">
     <!-- partial:partials/_navbar.html -->

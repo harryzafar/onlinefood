@@ -5,16 +5,16 @@ if(isset($_GET['type']) && $_GET['type'] !== "" && isset($_GET['id']) && $_GET['
     $type = $_GET['type'];
     $id = $_GET['id'];
     if($type == 'delete'){
-      mysqli_query($conn, "DELETE from coupon_code where id = '$id'");
-      redirect('coupon_code.php');
-  }
+        mysqli_query($conn, "DELETE from dish where id = '$id'");
+        redirect('dishes.php');
+    }
     if($type == 'active' || $type == 'deactive'){
         $status = 1;
         if($type == "deactive"){
             $status = 0;
         }
-        mysqli_query($conn , "UPDATE coupon_code set status = '$status'  where id = '$id'" );
-        redirect('coupon_code.php');
+        mysqli_query($conn , "UPDATE dish set status = '$status'  where id = '$id'" );
+        redirect('dishes.php');
     }
     
 }
@@ -39,8 +39,8 @@ include('head.php');
            <div class="card">
             <div class="card-body">
             <div class="d-flex justify-content-between">
-                <h4 class="mb-3">Coupan Code Master</h4>
-                <a href="manage_coupon.php" class="btn btn-primary">Add Coupan</a>
+                <h4 class="mb-3">Dish Master</h4>
+                <a href="manage_dish.php" class="btn btn-primary">Add Dish</a>
               </div>
               
               <div class="row mt-3">
@@ -50,19 +50,17 @@ include('head.php');
                       <thead>
                         <tr>
                             <th width="10%">Order #</th>
-                            <th>Code</th>
-                            <th>Type</th>
-                            <th>Value</th>
-                            <th>Cart Min Val</th>
-                            <th>Expired On</th>
+                            <th>Dish</th>
+                            <th>Category</th>
+                            <th>Image</th>
                             <th>Added On</th>
-                            <th>Actions</th>
+                            <th>Action</th>
                         </tr>
                       </thead>
                       <tbody>
                         <?php
-                         $sql = "SELECT * FROM coupon_code";
-                         $result= mysqli_query($conn, $sql) or die('coupan_code query failed');
+                         $sql = "SELECT dish.*, category.id as cat_id, category.category as cat_name FROM dish INNER JOIN category on dish.category_id = category.id ";
+                         $result= mysqli_query($conn, $sql) or die('dish query failed');
 
                         if(mysqli_num_rows($result) > 0){
                             $sr = 1;
@@ -70,12 +68,11 @@ include('head.php');
 
                             <tr>
                             <td><?php echo $sr;?></td>
-                            <td><?php echo $row['coupon_code'];?></td>
+                            <td><?php echo $row['dish'];?></td>
                             
-                            <td><?php echo $row['coupon_type']; ?></td>
-                            <td><?php echo $row['coupon_value']; ?></td>
-                            <td><?php echo $row['cart_min_value']; ?></td>
-                            <td><?php echo $row['expired_on']; ?></td>
+                            <td><?php echo $row['cat_name'];?></td>
+                            <td>
+                                <img src="<?php echo DISH_IMG_PATH.$row['image'];?>" alt=""></td>
                             <td><?php
                                  $dateStr = strtotime($row['added_on']);
                                  echo date('d-m-Y', $dateStr);
@@ -89,14 +86,14 @@ include('head.php');
                                 <a href="?id=<?php echo $row['id']?>&type=active" class="badge badge-warning">Deactive</a>
                                <?php ;}
                                 ?>
-                                <a href="manage_coupon.php?id=<?php echo $row['id'];?>" class="badge badge-primary">Edit</a>
+                                <a href="manage_dish.php?id=<?php echo $row['id'];?>" class="badge badge-primary">Edit</a>
                                 <a href="?id=<?php echo $row['id'];?>&type=delete" class="badge badge-danger">Delete</a>
                             </td>
                         </tr>
                          <?php $sr++; } 
                         }else{?>
                             <tr>
-                            <td colspan="9" class="text-center">No data found</td>
+                            <td colspan="5" class="text-center">No data found</td>
                             
                         </tr>
 

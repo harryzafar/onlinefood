@@ -30,6 +30,12 @@
               <span class="menu-title">Coupan Code</span>
             </a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="dishes.php">
+              <i class="mdi mdi-food-fork-drink menu-icon"></i>
+              <span class="menu-title">Dishes</span>
+            </a>
+          </li>
           
 
         </ul>

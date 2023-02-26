@@ -29,27 +29,28 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
       $coupon_value = get_safe_value($_POST['coupon_value']) ;
       $cart_min_value = get_safe_value($_POST['cart_min_value']);
       $expired_on= get_safe_value($_POST['expired_on']);
-      $added_on = date('Y-m-i h:i:s');
+      $added_on = date('Y-m-d h:i:s');
 
         if($id == ''){
-          $check_cateogry_query = "SELECT * FROM delivery_boy where mobile = '$mobile'";
+      
+          $check_cateogry_query = "SELECT * FROM coupon_code where coupon_code = '$coupon_code'";
         }else{
-          $check_cateogry_query = "SELECT * FROM delivery_boy where mobile = '$mobile' AND id != '$id'";
+          $check_cateogry_query = "SELECT * FROM coupon_code where coupon_code = '$coupon_code' AND id != '$id'";
         }
         
         if(mysqli_num_rows(mysqli_query($conn, $check_cateogry_query)) > 0 ){
-            $error = "This Boy's number is already Exist";
+            $error = "This Coupon Code number is already Exist";
         }
         else{
           if($id == ''){
-            $sql = "INSERT INTO delivery_boy (name, mobile, password, status, added_on) values ('$name', '$mobile', $password, 1, '$added_on')";
+            $sql = "INSERT INTO coupon_code (coupon_code, coupon_type, coupon_value, cart_min_value, expired_on, status, added_on) values ('$coupon_code', '$coupon_type', '$coupon_value', '$cart_min_value','$expired_on', 1 , '$added_on')";
           }else{
-            $sql = "UPDATE delivery_boy set name = '$name', mobile = '$mobile', password = '$password' where id = '$id'";
+            $sql = "UPDATE coupon_code set coupon_code = '$coupon_code', coupon_type = '$coupon_type', coupon_value = '$coupon_value', cart_min_value= '$cart_min_value',expired_on='$expired_on', added_on='$added_on'  where id = '$id'";
           }
             
             $query = mysqli_query($conn , $sql) or die("add/edit query failed");
             if($query){
-                redirect('delivery_boy.php');
+                redirect('coupon_code.php');
             }
             else{
                 $error = "Something went Wrong in inserting";
@@ -62,24 +63,9 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 }
 
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Food Ordering Admin</title>
-  <!-- plugins:css -->
-  <link rel="stylesheet" href="assets/css/materialdesignicons.min.css">
-  <link rel="stylesheet" href="assets/css/vendor.bundle.base.css">
-  <link rel="stylesheet" href="assets/css/dataTables.bootstrap4.css">
-  <!-- endinject -->
-  <!-- Plugin css for this page -->
-  <link rel="stylesheet" href="assets/css/bootstrap-datepicker.min.css">
-  <!-- End plugin css for this page -->
-  <!-- inject:css -->
-  <link rel="stylesheet" href="assets/css/style.css">
-</head>
+<?php
+include('head.php');
+?>
 <body class="sidebar-light">
   <div class="container-scroller">
     <!-- partial:partials/_navbar.html -->
@@ -103,20 +89,43 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                   <form class="forms-sample" method="post">
                     <div class="form-group">
                       <label for="exampleInputName1">Coupon Code</label>
-                      <input type="text" class="form-control" id="exampleInputName1" placeholder="Name" name="name" value="<?php echo $name;?>">
-                    </div>
-                    <div class="form-group">
-                      <label for="exampleInputPassword4">Mobile</label>
-                      <input type="text" class="form-control" id="exampleInputPassword4" placeholder="Mobile" name="mobile" value="<?php echo $mobile;?>">
+                      <input type="text" class="form-control" id="exampleInputName1" placeholder="Name" name="coupon_code" value="<?php echo $coupon_code;?>">
                       <p class="text-danger mt-2"><?php echo $error ;?></p>
                     </div>
                     <div class="form-group">
-                      <label for="exampleInputPassword2">Password</label>
-                      <input type="password" class="form-control" id="exampleInputPassword2" placeholder="Password" name="password" value="<?php echo $password;?>">
+                      <label for="exampleInputPassword4">Coupon Type</label>
+                      
+                      <select class="form-control" name="coupon_type" id="exampleInputPassword4">
+                        <option value="">Select Type</option>
+                        <?php
+                        $tpye_arr = ['P'=>'Percentage', 'F'=>'Fixed'];
+                        foreach($tpye_arr as $key=>$value ){
+                          if($key == $coupon_type){
+                            echo '<option value="'.$key.'" selected >'.$value.'</option>';
+                          }else{
+                            echo '<option value="'.$key.'">'.$value.'</option>';
+                          }
+                     
+                         }
+                        ?>
+                      </select>
+                      
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputPassword2">Coupon Value</label>
+                      <input type="text" class="form-control" id="exampleInputPassword2" placeholder="Coupon Value" name="coupon_value" value="<?php echo $coupon_value;?>">
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputPassword3">Cart MIn Value</label>
+                      <input type="text" class="form-control" id="exampleInputPassword3" placeholder="Coupon Value" name="cart_min_value" value="<?php echo $cart_min_value;?>">
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputPassword6">Expired On</label>
+                      <input type="date" class="form-control" id="exampleInputPassword6" placeholder="Coupon Value" name="expired_on" value="<?php echo $expired_on;?>">
                     </div>
                     
                     <button type="submit" class="btn btn-primary mr-2" name="submit">Submit</button>
-                    <a href="delivery_boy.php" class="btn btn-light">Cancel</a>
+                    <a href="coupon_code.php" class="btn btn-light">Cancel</a>
                   </form>
                 </div>
               </div>
